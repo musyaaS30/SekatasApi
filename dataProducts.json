@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "name": "Nike Air Zoom Pegasus 40",
+    "brand": "Nike",
+    "category": "Biasa",
+    "type": "Pria",
+    "price": 1899000,
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 2,
+    "name": "Adidas Ultraboost Light",
+    "brand": "Adidas",
+    "category": "Recommended",
+    "type": "Wanita",
+    "price": 2599000,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 3,
+    "name": "Vans Old Skool Black White",
+    "brand": "Vans",
+    "category": "Biasa",
+    "type": "Anak-anak",
+    "price": 899000,
+    "image": "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 4,
+    "name": "New Balance 327 Grey",
+    "brand": "New Balance",
+    "category": "Biasa",
+    "type": "Pria",
+    "price": 1599000,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 5,
+    "name": "Puma RS-X Bold",
+    "brand": "Puma",
+    "category": "Biasa",
+    "type": "Pria",
+    "price": 1499000,
+    "image": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 6,
+    "name": "Converse Chuck Taylor All Star",
+    "brand": "Converse",
+    "category": "Biasa",
+    "type": "Wanita",
+    "price": 799000,
+    "image": "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 7,
+    "name": "Reebok Nano X2",
+    "brand": "Reebok",
+    "category": "Biasa",
+    "type": "Pria",
+    "price": 1799000,
+    "image": "https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 8,
+    "name": "Skechers Arch Fit Sunny Days",
+    "brand": "Skechers",
+    "category": "Biasa",
+    "type": "Wanita",
+    "price": 1199000,
+    "image": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 9,
+    "name": "Fila Disruptor II Premium",
+    "brand": "Fila",
+    "category": "Recommended",
+    "type": "Wanita",
+    "price": 999000,
+    "image": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 10,
+    "name": "Asics Gel-Kayano 30",
+    "brand": "Asics",
+    "category": "Recommended",
+    "type": "Pria",
+    "price": 2399000,
+    "image": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 11,
+    "name": "Nike Air Force 1 Low",
+    "brand": "Nike",
+    "category": "Biasa",
+    "type": "Pria",
+    "price": 1599000,
+    "image": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 12,
+    "name": "Adidas Stan Smith",
+    "brand": "Adidas",
+    "category": "Biasa",
+    "type": "Wanita",
+    "price": 1249000,
+    "image": "https://images.unsplash.com/photo-1619702549108-cc0f396e4dc5?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 13,
+    "name": "New Balance Fresh Foam 1080v13",
+    "brand": "New Balance",
+    "category": "Recommended",
+    "type": "Pria",
+    "price": 2799000,
+    "image": "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    "id": 14,
+    "name": "Puma Cali Star Kids",
+    "brand": "Puma",
+    "category": "Biasa",
+    "type": "Anak-anak",
+    "price": 799000,
+    "image": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=500&q=80"
+  }
+]
