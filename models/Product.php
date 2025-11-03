@@ -1,110 +1,110 @@
 <?php
-require_once __DIR__ . '/Lookup.php';
+// models/Product.php
 
-class Product
-{
-    private $db;
+require_once __DIR__ . '/../config/database.php';
 
-    public function __construct($mysqli)
-    {
-        $this->db = $mysqli;
-    }
+class Product {
+    
+    // START FIX: Deklarasikan properti kelas
+    private $conn;
+    private $table_name = "produk";
+    // END FIX: Deklarasikan properti kelas
 
-    /** Ambil semua produk */
-    public function getAll()
-    {
-        $sql = "SELECT p.id, p.name, p.brand, c.name AS category, t.name AS `type`, p.price, p.image
-                FROM produk p
-                LEFT JOIN category c ON p.category_id = c.id
-                LEFT JOIN type t ON p.type_id = t.id
-                ORDER BY p.id ASC";
-        $res = $this->db->query($sql);
-        return $res->fetch_all(MYSQLI_ASSOC);
-    }
-
-    /** Ambil produk berdasarkan ID */
-    public function getById($id)
-    {
-        $sql = "SELECT p.id, p.name, p.brand, c.name AS category, t.name AS `type`, p.price, p.image
-                FROM produk p
-                LEFT JOIN category c ON p.category_id = c.id
-                LEFT JOIN type t ON p.type_id = t.id
-                WHERE p.id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
-    }
-
-    /** Buat produk baru */
-    public function create($data)
-    {
-        $catId = ensureLookup($this->db, 'category', $data['category']);
-        $typeId = ensureLookup($this->db, 'type', $data['type']);
-
-        $sql = "INSERT INTO produk (name, brand, category_id, type_id, price, image)
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("ssiiis", $data['name'], $data['brand'], $catId, $typeId, $data['price'], $data['image']);
-        $stmt->execute();
-
-        return $this->getById($stmt->insert_id);
-    }
-
-    /** Update produk */
-    public function update($id, $data)
-    {
-        // Ambil data existing
-        $existing = $this->getById($id);
-        if (!$existing) return false;
-
-        // Gunakan variabel untuk semua field agar bind_param bisa menerima by reference
-        $name     = isset($data['name']) ? $data['name'] : $existing['name'];
-        $brand    = isset($data['brand']) ? $data['brand'] : $existing['brand'];
-        $category = isset($data['category']) ? $data['category'] : $existing['category'];
-        $type     = isset($data['type']) ? $data['type'] : $existing['type'];
-        $price    = isset($data['price']) ? $data['price'] : $existing['price'];
-        $image    = isset($data['image']) ? $data['image'] : $existing['image'];
-
-        // Pastikan category & type ada di lookup table
-        $catId  = ensureLookup($this->db, 'category', $category);
-        $typeId = ensureLookup($this->db, 'type', $type);
-
-        // Prepare statement
-        $sql = "UPDATE produk 
-            SET name=?, brand=?, category_id=?, type_id=?, price=?, image=?
-            WHERE id=?";
-        $stmt = $this->db->prepare($sql);
-        if (!$stmt) {
-            throw new Exception("Prepare failed: " . $this->db->error);
+    public function __construct() {
+        // PENTING: Memanggil fungsi getConnection() yang ada di database.php
+        // Karena $conn dideklarasikan di atas, ia bisa digunakan oleh $this->conn
+        $this->conn = getConnection(); 
+        
+        if (!$this->conn) {
+            throw new Exception("Koneksi database gagal di Model Produk.");
         }
-
-        // Bind param (semua harus variabel)
-        $stmt->bind_param(
-            "ssiiisi",
-            $name,
-            $brand,
-            $catId,
-            $typeId,
-            $price,
-            $image,
-            $id
-        );
-
-        // Eksekusi
-        $result = $stmt->execute();
-        $stmt->close();
-
-        return $result;
     }
 
+    // --- READ SEMUA PRODUK ---
+    public function getAll() {
+        // $this->table_name sekarang terdefinisi.
+        $query = "SELECT 
+                    p.id, p.name, p.brand, p.price, p.image, 
+                    c.name AS category_name, 
+                    t.name AS type_name,
+                    p.created_at, p.updated_at
+                  FROM " . $this->table_name . " p
+                  JOIN category c ON p.category_id = c.id
+                  JOIN type t ON p.type_id = t.id
+                  -- Mengurutkan berdasarkan ID, menaik (ASC)
+                  ORDER BY p.id ASC"; 
+        
+        // $this->conn sekarang terdefinisi.
+        $result = $this->conn->query($query);
+        $products = [];
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $products[] = $row;
+            }
+        }
+        return $products;
+    }
 
-    /** Hapus produk */
-    public function delete($id)
-    {
-        $stmt = $this->db->prepare("DELETE FROM produk WHERE id = ?");
+    // --- READ SATU PRODUK ---
+    public function getById($id) {
+        $query = "SELECT 
+                    p.id, p.name, p.brand, p.price, p.image, 
+                    c.name AS category_name, 
+                    t.name AS type_name,
+                    p.created_at, p.updated_at
+                  FROM " . $this->table_name . " p
+                  JOIN category c ON p.category_id = c.id
+                  JOIN type t ON p.type_id = t.id
+                  WHERE p.id = ? LIMIT 1";
+        
+        $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $id);
         $stmt->execute();
-        return $stmt->affected_rows > 0;
+        $result = $stmt->get_result();
+
+        return $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    }
+
+    // --- CREATE PRODUK BARU ---
+    public function create($name, $brand, $category_id, $type_id, $price, $image) {
+        $query = "INSERT INTO " . $this->table_name . " (name, brand, category_id, type_id, price, image) 
+                  VALUES (?, ?, ?, ?, ?, ?)";
+        
+        $stmt = $this->conn->prepare($query);
+        // Tipe data: string, string, integer, integer, integer, string
+        $stmt->bind_param("ssiiss", $name, $brand, $category_id, $type_id, $price, $image); 
+
+        return $stmt->execute();
+    }
+
+    // --- UPDATE PRODUK ---
+    public function update($id, $name, $brand, $category_id, $type_id, $price, $image) {
+        // Gunakan IFNULL untuk mengizinkan field tidak diubah jika nilainya null di payload
+        $query = "UPDATE " . $this->table_name . " SET 
+                    name = IFNULL(?, name), 
+                    brand = IFNULL(?, brand), 
+                    category_id = IFNULL(?, category_id), 
+                    type_id = IFNULL(?, type_id), 
+                    price = IFNULL(?, price), 
+                    image = IFNULL(?, image)
+                  WHERE id = ?";
+        
+        $stmt = $this->conn->prepare($query);
+
+        // Bind parameter. Semua di set string (s) untuk bind_param
+        // Anda mungkin perlu menyesuaikan tipe data binding (i untuk integer, s untuk string)
+        $stmt->bind_param("ssiiisi", $name, $brand, $category_id, $type_id, $price, $image, $id);
+
+        return $stmt->execute();
+    }
+
+    // --- DELETE PRODUK ---
+    public function delete($id) {
+        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $id);
+
+        return $stmt->execute();
     }
 }

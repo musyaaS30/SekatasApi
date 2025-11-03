@@ -1,22 +1,40 @@
 <?php
+// routes/products.php
+
 require_once __DIR__ . '/../controllers/ProductController.php';
 
-$controller = new ProductController($mysqli);
+// Variabel $action (ID) berasal dari index.php
+$id = $action; // Menggunakan variabel $action dari index.php sebagai ID
+$controller = new ProductController();
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        $controller->get($id ?? null);
+        if ($id) {
+            // GET /products/123 -> Detail Produk
+            $controller->show($id);
+        } else {
+            // GET /products -> Daftar Semua Produk
+            $controller->index();
+        }
         break;
+
     case 'POST':
-        $controller->create();
+        // POST /products -> Tambah Produk Baru
+        $controller->store();
         break;
+
     case 'PUT':
-        $controller->update($id ?? null);
+        // PUT /products/123 -> Update Produk
+        $controller->update($id);
         break;
+
     case 'DELETE':
-        $controller->delete($id ?? null);
+        // DELETE /products/123 -> Hapus Produk
+        $controller->destroy($id);
         break;
+
     default:
-        respond(['error' => 'Method not allowed'], 405);
+        respond(['error' => 'Method Not Allowed'], 405);
+        break;
 }
